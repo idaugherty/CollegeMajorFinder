@@ -9,7 +9,8 @@ import { fileURLToPath } from 'url';
 //getting the directory path
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 //making the database path
-const dbPath = path.join(__dirname, 'db', 'users.db');
+//making a shared database
+const dbPath = path.join(__dirname, 'db', 'app.db');
 
 //making the database
 const db = new sqlite3.Database(dbPath, (err)=> {

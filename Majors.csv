@@ -1,0 +1,139 @@
+id,collegeOfMajor,Department,major
+1,Business,Accounting,Accounting
+2,Business,Accounting,Accounting - Finance Track
+3,Business,Accounting,Account - Financial Planning Track
+4,Business,Accounting,Account - Information Systems Track
+5,Business,Computer Science and Information Systems,Computer Information Systems
+6,Business,Computer Science and Information Systems,Computer Science
+7,Business,Computer Science and Information Systems,Computer Science - Game Development Track
+8,Business,Computer Science and Information Systems,Computer Science - Data Science Track
+9,Business,Economics and Finance,Economics
+10,Business,Economics and Finance,Finance
+11,Business,Economics and Finance,Finance - Commerical Banking Track
+12,Business,Economics and Finance,Finance - Financial Planning Track
+13,Business,Journalism and Mass Communications,Multimedia Journalism
+14,Business,Journalism and Mass Communications,Visual Communications - Graphic Communications Track
+15,Business,Journalism and Mass Communications,Visual Communications - Multimedia Production Track
+16,Business,Journalism and Mass Communications,Visual Communications - Photography Track
+17,Business,Journalism and Mass Communications,Strategic Communications - Advertising Track
+18,Business,Journalism and Mass Communications,Strategic Communications - Public Relations Track
+19,Business,"Management, Marketing and Business Administration",Business Administration
+20,Business,"Management, Marketing and Business Administration",Business Administration - International Business Track
+21,Business,"Management, Marketing and Business Administration",Management - Entrepreneurship Track
+22,Business,"Management, Marketing and Business Administration",Marketing - Entrepreneurship Track
+23,Business,"Management, Marketing and Business Administration",Management - Human Resources Track
+24,Business,"Management, Marketing and Business Administration",Logistics and Supply Chain
+25,Business,"Management, Marketing and Business Administration",Management
+26,Business,"Management, Marketing and Business Administration",Marketing
+27,Business,Organizational Communication and Leadership,Organizational Communication
+28,Business,Organizational Communication and Leadership,Nonprofit Leadership Studies
+29,Agriculture,Agriculture,Agriculture
+30,Agriculture,Agriculture,Agribusiness Economics
+31,Agriculture,Agriculture,Agricultural Education
+32,Agriculture,Agriculture,Agricultural Systems Technology
+33,Agriculture,Agriculture,Agriscience Technology
+34,Agriculture,Agriculture,Animal Science
+35,Agriculture,Agriculture,Equine Science
+36,Agriculture,Agriculture,Crop and Soil Science
+37,Agriculture,Agriculture,Agriscience Technology - Horticulture Emphasis
+38,Agriculture,Agriculture,Pre-Veterinary Medicine
+39,Agriculture,Agriculture,Veterinary Technology
+40,"Science, Engineering, and Technology",Biological Science,Biology
+41,"Science, Engineering, and Technology",Biological Science,Fisheries/ Aquatic Biology
+42,"Science, Engineering, and Technology",Biological Science,Biomedical Science
+43,"Science, Engineering, and Technology",Biological Science,Pre-Dentistry
+44,"Science, Engineering, and Technology",Biological Science,Pre-Optometry
+45,"Science, Engineering, and Technology",Biological Science,Pre-Pharmacy
+46,"Science, Engineering, and Technology",Biological Science,Pre-Phyiscal Therapy
+47,"Science, Engineering, and Technology",Biological Science,Pre-Physician Assistant
+48,"Science, Engineering, and Technology",Biological Science,Wildlife and Conservation Biology
+49,"Science, Engineering, and Technology",Chemistry,Chemistry
+50,"Science, Engineering, and Technology",Chemistry,Chemistry  - Pre-Med
+51,"Science, Engineering, and Technology",Chemistry,Chemistry - Pre-Dental
+52,"Science, Engineering, and Technology",Chemistry,Chemistry - Pre-Pharmacy
+53,"Science, Engineering, and Technology",Chemistry,Chemistry - Biochemistry option
+54,"Science, Engineering, and Technology",Chemistry,Chemistry - Chemistry Polymer and Materials Science Track
+55,"Science, Engineering, and Technology",Earth and Environmental Sciences,Anthropology
+56,"Science, Engineering, and Technology",Earth and Environmental Sciences,Archaeology
+57,"Science, Engineering, and Technology",Earth and Environmental Sciences,Enviromental Science
+58,"Science, Engineering, and Technology",Earth and Environmental Sciences,Geography and GIS
+59,"Science, Engineering, and Technology",Earth and Environmental Sciences,Geology
+60,"Science, Engineering, and Technology",Engineering,Applied Engineering - Automation and Controls Track
+61,"Science, Engineering, and Technology",Engineering,Applied Engineering - Manifacturing and Industrial Systems Track
+62,"Science, Engineering, and Technology",Engineering,Applied Physics
+63,"Science, Engineering, and Technology",Engineering,Applied Physics - Pre-MBA Track
+64,"Science, Engineering, and Technology",Engineering,Civil and Sustainability Engineering 
+65,"Science, Engineering, and Technology",Engineering,Construction Management and Architecture - Architecture Design Track
+66,"Science, Engineering, and Technology",Engineering,Construction Management and Architecture - Construction Management Track
+67,"Science, Engineering, and Technology",Engineering,Cybersecurity and Metwork Management - Cloud and System Administration Track
+68,"Science, Engineering, and Technology",Engineering,Cybersecurity and Metwork Management - Industrial Cybersecurity Track
+69,"Science, Engineering, and Technology",Engineering,Design Engineering Technology
+70,"Science, Engineering, and Technology",Engineering,Engineering Physics
+71,"Science, Engineering, and Technology",Engineering,Engineering Physics - Advanced Physics Track
+72,"Science, Engineering, and Technology",Engineering,Engineering Physics - Aerospace Engineering Track
+73,"Science, Engineering, and Technology",Engineering,Engineering Physics - Electrical Engineering Track
+74,"Science, Engineering, and Technology",Engineering,Engineering Physics - Mechanical Engineering Track
+75,"Science, Engineering, and Technology",Engineering,Physics
+76,"Science, Engineering, and Technology",Mathematics and Statistics,Mathematics
+77,"Science, Engineering, and Technology",Mathematics and Statistics,Mathematics - Actuarial Science Track
+78,"Science, Engineering, and Technology",Mathematics and Statistics,Mathematics - Applied Mathematics Track
+79,"Science, Engineering, and Technology",Mathematics and Statistics,Mathematics - Data Science Track
+80,"Science, Engineering, and Technology",Mathematics and Statistics,Mathematics - Pre-MBA Track
+81,"Science, Engineering, and Technology",Mathematics and Statistics,Mathematics - Pre-MS in Biostatistics Track
+82,"Science, Engineering, and Technology",Cybersecurity and Network Management,Cybersecurity
+83,"Science, Engineering, and Technology",Occupational Safety and Health,Occupational Safety and Health
+84,Humanities and Fine Arts,Art and Design,Studio Art and Design
+85,Humanities and Fine Arts,Art and Design,Studio Art and Design with Enhanced Art History
+86,Humanities and Fine Arts,Art and Design,Studio Art and Design with Teaching Certification
+87,Humanities and Fine Arts,English and Philosophy,Creative Writing
+88,Humanities and Fine Arts,English and Philosophy,English Education
+89,Humanities and Fine Arts,English and Philosophy,Literature
+90,Humanities and Fine Arts,English and Philosophy,Philosophy
+91,Humanities and Fine Arts,English and Philosophy,English Education - Teaching English to Speakers of Other Languages (P-12) Track
+92,Humanities and Fine Arts,English and Philosophy,English Education - Teaching English to Speakers of Other Languages Track
+93,Humanities and Fine Arts,English and Philosophy,English Literature
+94,Humanities and Fine Arts,English and Philosophy,Philosophy
+95,Humanities and Fine Arts,History,History
+96,Humanities and Fine Arts,History,Religious Studies
+97,Humanities and Fine Arts,Global Languages,Culture and Language Studies - Chinese Track
+98,Humanities and Fine Arts,Global Languages,Global Language - Spanish Track
+99,Humanities and Fine Arts,Global Languages,Global Language - Spanish Translation and Interpretation Track
+100,Humanities and Fine Arts,Global Languages,Global Language - Spanish Teaching Certification Track
+101,Humanities and Fine Arts,Music,MusicEducation - Instramental Emphasis
+102,Humanities and Fine Arts,Music,Music Education - Vocal Emphasis
+103,Humanities and Fine Arts,Music,Music Performance
+104,Humanities and Fine Arts,Music,Music Composition
+105,Humanities and Fine Arts,Music,Musical Theatre
+106,Humanities and Fine Arts,Music,Music
+107,Humanities and Fine Arts,Music,Music - Business Tarck
+108,Humanities and Fine Arts,Political Science and Sociology,Political Science
+109,Humanities and Fine Arts,Political Science and Sociology,Political Science - Pre-Professional Legal Studies Track
+110,Humanities and Fine Arts,Political Science and Sociology,Sociology 
+111,Humanities and Fine Arts,Political Science and Sociology,Sociology - Social Inequality and Human Rights Area
+112,Humanities and Fine Arts,Political Science and Sociology,International Studies
+113,Humanities and Fine Arts,Psychology,Psychology
+114,Humanities and Fine Arts,Psychology,Psychology - Applied Behavior Analysis Track
+115,Humanities and Fine Arts,Theatre,Theatre
+116,Humanities and Fine Arts,Theatre,Theatre - Film Track
+117,Humanities and Fine Arts,Theatre,Threatre - Muscial Theatre Track
+118,Nursing and Health Professions,Nursing,Nursing
+119,Nursing and Health Professions,Excerise Science,Excerise Science
+120,Nursing and Health Professions,Nutruition and Dietetics,Nutruition and Dietetics
+121,Nursing and Health Professions,Nutruition and Dietetics,Nutruition and Dietetics - Foods Track
+122,Nursing and Health Professions,Public and Community Health,Public and Community Health
+123,Education and Human Services,"Adolescent, Career, and Special Education",Middle School Education
+124,Education and Human Services,"Adolescent, Career, and Special Education",Secondary Education
+125,Education and Human Services,"Adolescent, Career, and Special Education",Health and Phyiscal Education
+126,Education and Human Services,"Adolescent, Career, and Special Education",Special Education 
+127,Education and Human Services,"Adolescent, Career, and Special Education",Career and Technical Education - Business and Marketing Education Track
+128,Education and Human Services,"Adolescent, Career, and Special Education",Career and Technical Education - Engineering and Technology Education Track
+129,Education and Human Services,"Adolescent, Career, and Special Education",Career and Technical Education - Family and Consumer Sciences Education Track
+130,Education and Human Services,"Adolescent, Career, and Special Education",Career and Technical Education - Occupation Based Teacher Education Track
+131,Education and Human Services,"Adolescent, Career, and Special Education",Learning and Behavior Disorders - Elementary Emphasis
+132,Education and Human Services,"Adolescent, Career, and Special Education",Learning and Behavior Disorders - Middle School Emphasis
+133,Education and Human Services,Communication Disorders,Communication Disorders
+134,Education and Human Services,Community Leadership and Human Services,Criminal Justice
+135,Education and Human Services,Community Leadership and Human Services,Social Work
+136,Education and Human Services,Early Childhood and Elementary Education,Elementary Education
+137,Education and Human Services,Early Childhood and Elementary Education,Interdisciplinary Early Childhood Education
+138,Education and Human Services,"Educational Studies, Leadership, and Counseling",Counseling

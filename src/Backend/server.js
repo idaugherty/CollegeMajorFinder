@@ -95,6 +95,82 @@ app.delete('/api/users/:id', (req, res) => {
     });
 });
 
+// MAJORS ENDPOINTS
+app.get('/api/majors', (req, res) => {
+    db.all('SELECT * FROM majors', [], (err, rows) => {
+        if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+        res.json(rows);
+    });
+});
+
+app.get('/api/majors/:id', (req, res) => {
+    const { id } = req.params;
+
+    db.get('SELECT * FROM majors WHERE id = ?', [id], (err, row) => {
+        if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+        if (!row) {
+            return res.status(404).json({ error: 'Major not found' });
+        }
+        res.json(row);
+    });
+});
+
+app.post('/api/majors', (req, res) => {
+    const { id, collegeOfMajor, Department, major } = req.body;
+
+    if (!id || !collegeOfMajor || !Department || !major) {
+        return res.status(400).json({ error: 'id, collegeOfMajor, Department, and major are required' });
+    }
+
+    db.run(
+        'INSERT INTO majors (id, collegeOfMajor, Department, major) VALUES (?, ?, ?, ?)',
+        [id, collegeOfMajor, Department, major],
+        function(err) {
+            if (err) {
+                return res.status(400).json({ error: err.message });
+            }
+            res.status(201).json({ id, collegeOfMajor, Department, major });
+        }
+    );
+});
+
+app.put('/api/majors/:id', (req, res) => {
+    const { id } = req.params;
+    const { collegeOfMajor, Department, major } = req.body;
+
+    db.run(
+        'UPDATE majors SET collegeOfMajor = ?, Department = ?, major = ? WHERE id = ?',
+        [collegeOfMajor, Department, major, id],
+        function(err) {
+            if (err) {
+                return res.status(400).json({ error: err.message });
+            }
+            if (this.changes === 0) {
+                return res.status(404).json({ error: 'Major not found' });
+            }
+            res.json({ message: 'Major updated successfully', id });
+        }
+    );
+});
+
+app.delete('/api/majors/:id', (req, res) => {
+    const { id } = req.params;
+
+    db.run('DELETE FROM majors WHERE id = ?', [id], function(err) {
+        if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+        if (this.changes === 0) {
+            return res.status(404).json({ error: 'Major not found' });
+        }
+        res.json({ message: 'Major deleted successfully', id });
+    });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'Server is running' });
