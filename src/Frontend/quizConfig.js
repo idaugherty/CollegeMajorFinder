@@ -74,9 +74,12 @@ export function getRankedQuizMatches(majors, quizAnswers) {
       let weightedPreference = 0;
       let matchedTraitCount = 0;
       const reasons = [];
+      // matchedTraits powers the "why this matched you" breakdown on each result card
+      const matchedTraits = [];
 
       QUIZ_QUESTIONS.forEach((question) => {
         const hasKeywordMatch = question.keywords.some((keyword) => combinedText.includes(keyword));
+        // if none of this question's keywords appear in the major text, skip it entirely
         if (!hasKeywordMatch) {
           return;
         }
@@ -86,6 +89,11 @@ export function getRankedQuizMatches(majors, quizAnswers) {
         weightedPreference += ((answer - 1) / 4) * question.weight;
         matchedTraitCount += 1;
 
+        // bucket the raw score into a label so the UI can color-code it
+        const strength = answer >= 4 ? 'strong' : answer >= 3 ? 'neutral' : 'weak';
+        matchedTraits.push({ label: question.shortLabel, score: answer, strength });
+
+        // only include in reasons if the user actually rated it highly (4 or 5)
         if (answer >= 4) {
           reasons.push(question.shortLabel);
         }
@@ -101,7 +109,9 @@ export function getRankedQuizMatches(majors, quizAnswers) {
         coverage,
         rankScore,
         matchedTraitCount,
-        reasons: [...new Set(reasons)].slice(0, 2)
+        // dedupe reasons in case two questions share a shortLabel, cap at 2 for display
+        reasons: [...new Set(reasons)].slice(0, 2),
+        matchedTraits
       };
     })
     .sort((a, b) => b.rankScore - a.rankScore)

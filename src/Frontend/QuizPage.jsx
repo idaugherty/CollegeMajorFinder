@@ -9,6 +9,8 @@ const QuizPage = ({ user, onBackToDashboard, onLogout }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
+  // tracks which result card has its "why this matched" breakdown open
+  const [expandedReasonId, setExpandedReasonId] = useState(null);
 
   const rankedMatches = useMemo(() => getRankedQuizMatches(majors, quizAnswers), [majors, quizAnswers]);
 
@@ -203,6 +205,48 @@ const QuizPage = ({ user, onBackToDashboard, onLogout }) => {
                       </div>
                       {major.reasons.length > 0 && (
                         <p className="quiz-reasons">Best aligned with: {major.reasons.join(', ')}</p>
+                      )}
+                      {/* only render this section if the scoring gave us trait data to show */}
+                      {major.matchedTraits && major.matchedTraits.length > 0 && (
+                        <div className="why-matched-section">
+                          {/* toggle open/close per card — clicking one doesn't close others */}
+                          <button
+                            type="button"
+                            className="why-matched-toggle"
+                            onClick={() => setExpandedReasonId(id => id === major.id ? null : major.id)}
+                          >
+                            {expandedReasonId === major.id ? '▲ Hide breakdown' : '▼ Why this matched you'}
+                          </button>
+                          {expandedReasonId === major.id && (
+                            <div className="why-matched-detail">
+                              {/* write a plain English sentence; fall back if no strong interests */}
+                              <p className="why-matched-intro">
+                                {major.reasons.length > 0
+                                  ? `Your strong interest in ${major.reasons.join(' and ')} drives this match.`
+                                  : 'This major aligns with several of your interest areas.'}
+                              </p>
+                              <ul className="trait-breakdown-list">
+                                {major.matchedTraits.map(trait => (
+                                  <li key={trait.label} className={`trait-item trait-${trait.strength}`}>
+                                    <span className="trait-label">{trait.label}</span>
+                                    {/* 5 dots, filled up to the user's score for that trait */}
+                                    <span className="trait-score-bar">
+                                      {[1,2,3,4,5].map(v => (
+                                        <span
+                                          key={v}
+                                          className={`trait-pip${v <= trait.score ? ' filled' : ''}`}
+                                        />
+                                      ))}
+                                    </span>
+                                    <span className={`trait-strength-label strength-${trait.strength}`}>
+                                      {trait.strength}
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>

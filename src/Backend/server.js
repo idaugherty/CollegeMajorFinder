@@ -30,6 +30,20 @@ db.run(`
     )
 `);
 
+// tracks which majors each user has saved/favorited
+// the UNIQUE constraint prevents the same major from being saved twice by the same user
+db.run(`
+    CREATE TABLE IF NOT EXISTS user_favorites (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        major_id INTEGER NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(user_id, major_id),
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (major_id) REFERENCES majors(id)
+    )
+`);
+
 function parseUserId(value) {
     const parsed = Number.parseInt(value, 10);
     return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
@@ -265,6 +279,69 @@ app.post('/api/quiz-profile', (req, res) => {
 // Health check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'Server is running' });
+});
+
+// FAVORITES ENDPOINTS
+
+// returns just the major_ids so the frontend can build a Set for quick lookups
+app.get('/api/favorites/:userId', (req, res) => {
+    const userId = parseUserId(req.params.userId);
+    if (!userId) {
+        return res.status(400).json({ error: 'Invalid user id' });
+    }
+
+    db.all(
+        'SELECT major_id FROM user_favorites WHERE user_id = ?',
+        [userId],
+        (err, rows) => {
+            if (err) {
+                return res.status(500).json({ error: 'Server error' });
+            }
+            res.json(rows);
+        }
+    );
+});
+
+// INSERT OR IGNORE means if the user already saved this major nothing blows up
+app.post('/api/favorites', (req, res) => {
+    const userId = parseUserId(req.body.userId);
+    const majorId = parseUserId(req.body.majorId);
+
+    if (!userId || !majorId) {
+        return res.status(400).json({ error: 'userId and majorId are required' });
+    }
+
+    db.run(
+        'INSERT OR IGNORE INTO user_favorites (user_id, major_id) VALUES (?, ?)',
+        [userId, majorId],
+        function(err) {
+            if (err) {
+                return res.status(500).json({ error: 'Could not save favorite' });
+            }
+            res.status(201).json({ message: 'Favorite added' });
+        }
+    );
+});
+
+// both IDs come from the URL so we validate them before touching the DB
+app.delete('/api/favorites/:userId/:majorId', (req, res) => {
+    const userId = parseUserId(req.params.userId);
+    const majorId = parseUserId(req.params.majorId);
+
+    if (!userId || !majorId) {
+        return res.status(400).json({ error: 'Invalid user id or major id' });
+    }
+
+    db.run(
+        'DELETE FROM user_favorites WHERE user_id = ? AND major_id = ?',
+        [userId, majorId],
+        function(err) {
+            if (err) {
+                return res.status(500).json({ error: 'Server error' });
+            }
+            res.json({ message: 'Favorite removed' });
+        }
+    );
 });
 
 // AUTH ENDPOINTS
