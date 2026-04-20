@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Dashboard from './Frontend/Dashboard.jsx'
+import QuizPage from './Frontend/QuizPage.jsx'
 import LoginPage from './Frontend/LoginPage.jsx'
 import RegisterPage from './Frontend/RegisterPage.jsx'
 import ForgotPassword from './Frontend/ForgotPassword.jsx'
@@ -30,7 +31,10 @@ function App() {
   };
 
   if (page === 'dashboard' && user) {
-    return <Dashboard user={user} onLogout={handleLogout} />;
+    return <Dashboard user={user} onLogout={handleLogout} onNavigateToQuiz={() => setPage('quiz')} />;
+  }
+  if (page === 'quiz' && user) {
+    return <QuizPage user={user} onLogout={handleLogout} onBackToDashboard={() => setPage('dashboard')} />;
   }
   if (page === 'register') {
     return <RegisterPage onNavigate={setPage} />;

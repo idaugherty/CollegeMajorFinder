@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './Dashboard.css';
 
-const Dashboard = ({ user, onLogout }) => {
+const Dashboard = ({ user, onLogout, onNavigateToQuiz }) => {
   const [majors, setMajors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCollege, setSelectedCollege] = useState('All');
@@ -98,6 +98,18 @@ const Dashboard = ({ user, onLogout }) => {
         <div className="stat-card">
           <div className="stat-number">{totalDepartments}</div>
           <div className="stat-label">Departments</div>
+        </div>
+      </div>
+
+      <div className="quiz-cta-container">
+        <div className="quiz-cta-card">
+          <div>
+            <h2 className="quiz-cta-title">Take Your Personalized Major Quiz</h2>
+            <p className="quiz-cta-subtitle">
+              Answer a quick preference scale and get a ranked list of majors that best match you.
+            </p>
+          </div>
+          <button className="quiz-cta-btn" onClick={onNavigateToQuiz}>Go to Quiz</button>
         </div>
       </div>
 

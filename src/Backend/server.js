@@ -19,6 +19,22 @@ function isAllowedEmail(email) {
 app.use(cors());
 app.use(express.json());
 
+db.run(`
+    CREATE TABLE IF NOT EXISTS quiz_profiles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL UNIQUE,
+        answers_json TEXT NOT NULL,
+        results_json TEXT NOT NULL,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+`);
+
+function parseUserId(value) {
+    const parsed = Number.parseInt(value, 10);
+    return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+}
+
 // CRUD ENDPOINTS FOR USERS
 
 // CREATE - Add a new user
@@ -181,6 +197,69 @@ app.delete('/api/majors/:id', (req, res) => {
         }
         res.json({ message: 'Major deleted successfully', id });
     });
+});
+
+// QUIZ PROFILE ENDPOINTS
+app.get('/api/quiz-profile/:userId', (req, res) => {
+    const userId = parseUserId(req.params.userId);
+    if (!userId) {
+        return res.status(400).json({ error: 'Invalid user id' });
+    }
+
+    db.get(
+        'SELECT answers_json, results_json, updated_at FROM quiz_profiles WHERE user_id = ?',
+        [userId],
+        (err, row) => {
+            if (err) {
+                return res.status(500).json({ error: 'Server error' });
+            }
+            if (!row) {
+                return res.status(404).json({ error: 'Quiz profile not found' });
+            }
+
+            try {
+                return res.json({
+                    answers: JSON.parse(row.answers_json),
+                    results: JSON.parse(row.results_json),
+                    updated_at: row.updated_at
+                });
+            } catch {
+                return res.status(500).json({ error: 'Saved quiz profile is invalid' });
+            }
+        }
+    );
+});
+
+app.post('/api/quiz-profile', (req, res) => {
+    const userId = parseUserId(req.body.userId);
+    const { answers, results } = req.body;
+
+    if (!userId || !answers || !results) {
+        return res.status(400).json({ error: 'userId, answers, and results are required' });
+    }
+
+    const answersJson = JSON.stringify(answers);
+    const resultsJson = JSON.stringify(results);
+
+    db.run(
+        `
+            INSERT INTO quiz_profiles (user_id, answers_json, results_json, updated_at)
+            VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(user_id)
+            DO UPDATE SET
+                answers_json = excluded.answers_json,
+                results_json = excluded.results_json,
+                updated_at = CURRENT_TIMESTAMP
+        `,
+        [userId, answersJson, resultsJson],
+        function(err) {
+            if (err) {
+                return res.status(500).json({ error: 'Could not save quiz profile' });
+            }
+
+            return res.json({ message: 'Quiz profile saved successfully' });
+        }
+    );
 });
 
 // Health check
