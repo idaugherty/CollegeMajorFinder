@@ -22,7 +22,6 @@ A full-stack web application for Murray State University students to explore, fi
 CollegeMajorFinder/
 ├── src/
 │   ├── App.jsx              # Root router (login / register / dashboard / quiz)
-│   ├── App.css
 │   ├── index.css
 │   ├── main.jsx
 │   ├── services/
