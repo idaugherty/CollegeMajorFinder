@@ -122,8 +122,12 @@
 
 .quiz-status {
   margin: 1rem 0 0;
-  color: #002147;
-  font-weight: 500;
+  color: #6f5308;
+  font-weight: 600;
+  background: #fff4d2;
+  border: 1px solid #f1d58a;
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
 }
 
 .quiz-results {

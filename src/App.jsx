@@ -1,48 +1,71 @@
 import React, { useState, useEffect } from 'react'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import Dashboard from './Frontend/Dashboard.jsx'
 import QuizPage from './Frontend/QuizPage.jsx'
 import LoginPage from './Frontend/LoginPage.jsx'
 import RegisterPage from './Frontend/RegisterPage.jsx'
 import ForgotPassword from './Frontend/ForgotPassword.jsx'
 
+function ProtectedRoute({ user, children }) {
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
 function App() {
-  const [page, setPage] = useState('login');
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
   // Restore session from localStorage on load
   useEffect(() => {
     const saved = localStorage.getItem('user');
     if (saved) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setUser(JSON.parse(saved));
-      setPage('dashboard');
+      try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setUser(JSON.parse(saved));
+      } catch {
+        localStorage.removeItem('user');
+      }
     }
   }, []);
 
   const handleLogin = (userData) => {
     setUser(userData);
-    setPage('dashboard');
+    navigate('/dashboard', { replace: true });
   };
 
   const handleLogout = () => {
     localStorage.removeItem('user');
     setUser(null);
-    setPage('login');
+    navigate('/login', { replace: true });
   };
 
-  if (page === 'dashboard' && user) {
-    return <Dashboard user={user} onLogout={handleLogout} onNavigateToQuiz={() => setPage('quiz')} />;
-  }
-  if (page === 'quiz' && user) {
-    return <QuizPage user={user} onLogout={handleLogout} onBackToDashboard={() => setPage('dashboard')} />;
-  }
-  if (page === 'register') {
-    return <RegisterPage onNavigate={setPage} />;
-  }
-  if (page === 'forgot') {
-    return <ForgotPassword onNavigate={setPage} />;
-  }
-  return <LoginPage onLogin={handleLogin} onNavigate={setPage} />;
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />
+      <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage onLogin={handleLogin} />} />
+      <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <RegisterPage />} />
+      <Route path="/forgot-password" element={user ? <Navigate to="/dashboard" replace /> : <ForgotPassword />} />
+      <Route
+        path="/dashboard"
+        element={(
+          <ProtectedRoute user={user}>
+            <Dashboard user={user} onLogout={handleLogout} onNavigateToQuiz={() => navigate('/quiz')} />
+          </ProtectedRoute>
+        )}
+      />
+      <Route
+        path="/quiz"
+        element={(
+          <ProtectedRoute user={user}>
+            <QuizPage user={user} onLogout={handleLogout} onBackToDashboard={() => navigate('/dashboard')} />
+          </ProtectedRoute>
+        )}
+      />
+      <Route path="*" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />
+    </Routes>
+  );
 }
 
 export default App

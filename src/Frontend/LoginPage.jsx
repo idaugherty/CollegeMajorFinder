@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Auth.css';
+import { loginUser } from '../services/api.js';
+import { normalizeEmail, validateMurrayEmail } from '../utils/validation.js';
 
-const LoginPage = ({ onLogin, onNavigate }) => {
-  const domainRegex = /^[a-zA-Z0-9._%+-]+@murraystate\.edu$/i;
+const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -12,29 +14,25 @@ const LoginPage = ({ onLogin, onNavigate }) => {
     e.preventDefault();
     setError('');
 
-    if (!domainRegex.test(email.trim())) {
-      return setError('Email must end with @murraystate.edu');
+    const emailError = validateMurrayEmail(email);
+    if (emailError) {
+      return setError(emailError);
+    }
+    if (!password.trim()) {
+      return setError('Password is required.');
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
+      const data = await loginUser({
+        email: normalizeEmail(email),
+        password
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error);
-      } else {
-        localStorage.setItem('user', JSON.stringify(data));
-        onLogin(data);
-      }
-    } catch {
-      setError('Could not connect to server. Make sure the backend is running.');
+      localStorage.setItem('user', JSON.stringify(data));
+      onLogin(data);
+    } catch (apiError) {
+      setError(apiError.message);
     } finally {
       setLoading(false);
     }
@@ -82,13 +80,13 @@ const LoginPage = ({ onLogin, onNavigate }) => {
         </form>
 
         <div className="auth-links">
-          <button className="link-btn" onClick={() => onNavigate('forgot')}>
+          <Link className="link-btn" to="/forgot-password">
             Forgot your password?
-          </button>
+          </Link>
           <span className="auth-divider">·</span>
-          <button className="link-btn" onClick={() => onNavigate('register')}>
+          <Link className="link-btn" to="/register">
             Create an account
-          </button>
+          </Link>
         </div>
       </div>
     </div>

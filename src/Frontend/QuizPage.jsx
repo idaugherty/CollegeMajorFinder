@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import './QuizPage.css';
 import { QUIZ_QUESTIONS, getDefaultQuizAnswers, getRankedQuizMatches } from './quizConfig.js';
+import { getMajors, getQuizProfile, saveQuizProfile } from '../services/api.js';
 
 const QuizPage = ({ user, onBackToDashboard, onLogout }) => {
   const [majors, setMajors] = useState([]);
@@ -17,11 +18,10 @@ const QuizPage = ({ user, onBackToDashboard, onLogout }) => {
   useEffect(() => {
     const loadMajors = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/majors');
-        const data = await response.json();
+        const data = await getMajors();
         setMajors(data);
-      } catch {
-        setStatusMessage('Could not load majors right now.');
+      } catch (error) {
+        setStatusMessage(error.message || 'Could not load majors right now.');
       } finally {
         setLoading(false);
       }
@@ -37,13 +37,8 @@ const QuizPage = ({ user, onBackToDashboard, onLogout }) => {
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/api/quiz-profile/${user.id}`);
-        if (response.status === 404) {
-          return;
-        }
-
-        const data = await response.json();
-        if (!response.ok) {
+        const data = await getQuizProfile(user.id);
+        if (!data) {
           return;
         }
 
@@ -53,8 +48,8 @@ const QuizPage = ({ user, onBackToDashboard, onLogout }) => {
         if (Array.isArray(data.results) && data.results.length > 0) {
           setShowResults(true);
         }
-      } catch {
-        setStatusMessage('Could not load saved quiz profile.');
+      } catch (error) {
+        setStatusMessage(error.message || 'Could not load saved quiz profile.');
       }
     };
 
@@ -90,24 +85,14 @@ const QuizPage = ({ user, onBackToDashboard, onLogout }) => {
     setStatusMessage('');
 
     try {
-      const response = await fetch('http://localhost:3000/api/quiz-profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user.id,
-          answers: quizAnswers,
-          results: rankedMatches
-        })
+      await saveQuizProfile({
+        userId: user.id,
+        answers: quizAnswers,
+        results: rankedMatches
       });
-
-      const data = await response.json();
-      if (!response.ok) {
-        setStatusMessage(data.error || 'Could not save profile.');
-      } else {
-        setStatusMessage('Quiz profile saved. Your results will be there next time you sign in.');
-      }
-    } catch {
-      setStatusMessage('Could not connect to server to save profile.');
+      setStatusMessage('Quiz profile saved. Your results will be there next time you sign in.');
+    } catch (error) {
+      setStatusMessage(error.message || 'Could not save profile.');
     } finally {
       setSaving(false);
     }

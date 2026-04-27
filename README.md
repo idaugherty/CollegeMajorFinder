@@ -5,6 +5,8 @@ A full-stack web application for Murray State University students to explore, fi
 ## Features
 
 - **Authentication** — Register and sign in with a `@murraystate.edu` email address; forgot-password reset flow included.
+- **Client-Side Validation** — Email domain validation, password strength checks, and confirm-password validation are enforced in all auth forms before API submission.
+- **Route-Based Navigation** — Browser URL routes are fully wired with protected route behavior (`/login`, `/register`, `/forgot-password`, `/dashboard`, `/quiz`).
 - **Major Explorer** — Browse all MSU majors in a searchable, filterable grid. Filter by college, department, or interest area tag (STEM, Business, Health, Education, Arts & Media, Law & Policy, Agriculture, Humanities).
 - **Learn More Panels** — Expand any major card to see top high-paying career paths with median salaries, key skills you'll develop, and a direct link to the Murray State curriculum page.
 - **Personalized Quiz** — Rate 8 interest statements on a 1–5 scale and receive a ranked list of the 12 best-matching majors with compatibility scores.
@@ -12,6 +14,7 @@ A full-stack web application for Murray State University students to explore, fi
 - **Save Quiz Profile** — Quiz answers and results are persisted to the database and restored automatically on next sign-in.
 - **Saved Majors (Favorites)** — Heart button on every major card saves it to your personal list. The "Saved Majors" stat card filters the grid to show only your saved majors.
 - **Major Comparison** — Add up to 3 majors to a side-by-side comparison panel (sticky at the bottom) showing college, department, interest area, top careers, and key skills.
+- **Shared API Layer** — Frontend API requests are centralized through an Axios service module for consistent error handling and cleaner component code.
 
 ## Project Structure
 
@@ -22,6 +25,10 @@ CollegeMajorFinder/
 │   ├── App.css
 │   ├── index.css
 │   ├── main.jsx
+│   ├── services/
+│   │   └── api.js           # Shared Axios API client and endpoint helpers
+│   ├── utils/
+│   │   └── validation.js    # Shared client-side validation helpers
 │   ├── Backend/
 │   │   ├── db.js            # SQLite connection
 │   │   ├── initDb.js        # Initialize users table
@@ -87,6 +94,24 @@ CollegeMajorFinder/
    ```
    The app is available at `http://localhost:5173`.
 
+### Frontend Routes
+
+- `/login` — Sign in page
+- `/register` — Account creation page
+- `/forgot-password` — Password reset flow
+- `/dashboard` — Major explorer and comparison dashboard (protected)
+- `/quiz` — Personalized major ranking quiz (protected)
+
+### Environment Variable (Optional)
+
+By default, the frontend uses `http://localhost:3000` for API requests.
+
+To override the API base URL, create a `.env` file at the project root:
+
+```bash
+VITE_API_URL=http://localhost:3000
+```
+
 ## API Endpoints
 
 ### Authentication
@@ -139,6 +164,6 @@ See [Schema.md](Schema.md) for full table definitions. The database contains fou
 
 ## Technologies Used
 
-- **Frontend**: React 18, Vite, ESLint
+- **Frontend**: React 19, React Router DOM, Axios, Vite, ESLint
 - **Backend**: Express.js, SQLite3 (sqlite3 npm package), bcryptjs
 - **Data Import**: csv-parser

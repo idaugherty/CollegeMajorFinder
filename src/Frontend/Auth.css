@@ -1,23 +1,26 @@
 /* Shared Auth Page Styles */
 .auth-page {
   min-height: 100vh;
-  background: linear-gradient(160deg, #002147 0%, #003580 100%);
+  background:
+    radial-gradient(circle at 10% 15%, rgba(201, 162, 39, 0.25) 0%, rgba(201, 162, 39, 0) 26%),
+    linear-gradient(160deg, #031a35 0%, #063065 48%, #0a4b8c 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: auth-fade-in 420ms ease-out;
 }
 
 .auth-card {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.97);
   border-radius: 16px;
   padding: 2.5rem;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.32);
   text-align: center;
   border-top: 4px solid #C9A227;
+  backdrop-filter: blur(6px);
 }
 
 .auth-app-title {
@@ -120,6 +123,13 @@
   cursor: not-allowed;
 }
 
+.auth-btn:focus-visible,
+.link-btn:focus-visible,
+.form-group input:focus-visible {
+  outline: 3px solid rgba(201, 162, 39, 0.38);
+  outline-offset: 2px;
+}
+
 .auth-links {
   display: flex;
   align-items: center;
@@ -141,6 +151,7 @@
   padding: 0;
   text-decoration: underline;
   text-underline-offset: 2px;
+  transition: color 0.2s;
 }
 
 .link-btn:hover {
@@ -149,4 +160,29 @@
 
 .auth-divider {
   color: #ccc;
+}
+
+@keyframes auth-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 560px) {
+  .auth-page {
+    padding: 1rem;
+  }
+
+  .auth-card {
+    padding: 1.4rem;
+  }
+
+  .auth-title {
+    font-size: 1.5rem;
+  }
 }

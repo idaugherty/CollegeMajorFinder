@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
+import { registerUser } from '../services/api.js';
+import {
+  normalizeEmail,
+  validateDisplayName,
+  validateMurrayEmail,
+  validatePassword,
+  validatePasswordConfirm
+} from '../utils/validation.js';
 
-const RegisterPage = ({ onNavigate }) => {
-  const domainRegex = /^[a-zA-Z0-9._%+-]+@murraystate\.edu$/i;
+const RegisterPage = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [password, setPassword] = useState('');
@@ -16,35 +25,35 @@ const RegisterPage = ({ onNavigate }) => {
     setError('');
     setSuccess('');
 
-    if (password !== confirm) {
-      return setError('Passwords do not match');
+    const emailError = validateMurrayEmail(email);
+    if (emailError) {
+      return setError(emailError);
     }
-    if (!domainRegex.test(email.trim())) {
-      return setError('Email must end with @murraystate.edu');
+    const displayNameError = validateDisplayName(displayName);
+    if (displayNameError) {
+      return setError(displayNameError);
     }
-    if (password.length < 6) {
-      return setError('Password must be at least 6 characters');
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      return setError(passwordError);
+    }
+    const confirmError = validatePasswordConfirm(password, confirm);
+    if (confirmError) {
+      return setError(confirmError);
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim().toLowerCase(), password, display_name: displayName }),
+      await registerUser({
+        email: normalizeEmail(email),
+        password,
+        display_name: displayName.trim() || null
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error);
-      } else {
-        setSuccess('Account created! You can now sign in.');
-        setTimeout(() => onNavigate('login'), 1500);
-      }
-    } catch {
-      setError('Could not connect to server. Make sure the backend is running.');
+      setSuccess('Account created! You can now sign in.');
+      setTimeout(() => navigate('/login'), 1200);
+    } catch (apiError) {
+      setError(apiError.message);
     } finally {
       setLoading(false);
     }
@@ -119,9 +128,9 @@ const RegisterPage = ({ onNavigate }) => {
 
         <div className="auth-links">
           <span>Already have an account?</span>
-          <button className="link-btn" onClick={() => onNavigate('login')}>
+          <Link className="link-btn" to="/login">
             Sign in
-          </button>
+          </Link>
         </div>
       </div>
     </div>

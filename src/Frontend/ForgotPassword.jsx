@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
+import { checkResetEmail, resetPassword } from '../services/api.js';
+import {
+  normalizeEmail,
+  validateMurrayEmail,
+  validatePassword,
+  validatePasswordConfirm
+} from '../utils/validation.js';
 
-const ForgotPassword = ({ onNavigate }) => {
-  const domainRegex = /^[a-zA-Z0-9._%+-]+@murraystate\.edu$/i;
+const ForgotPassword = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1); // step 1: enter email, step 2: set new password
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -15,28 +23,21 @@ const ForgotPassword = ({ onNavigate }) => {
     e.preventDefault();
     setError('');
 
-    if (!domainRegex.test(email.trim())) {
-      return setError('Email must end with @murraystate.edu');
+    const emailError = validateMurrayEmail(email);
+    if (emailError) {
+      return setError(emailError);
     }
 
     setLoading(true);
 
     try {
-      // Check the email exists before allowing reset
-      const response = await fetch('http://localhost:3000/api/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim().toLowerCase(), checkOnly: true }),
+      await checkResetEmail({
+        email: normalizeEmail(email),
+        checkOnly: true
       });
-
-      // If server returns 404 the email doesn't exist
-      if (response.status === 404) {
-        setError('No account found with that email address');
-      } else {
-        setStep(2);
-      }
-    } catch {
-      setError('Could not connect to server. Make sure the backend is running.');
+      setStep(2);
+    } catch (apiError) {
+      setError(apiError.message);
     } finally {
       setLoading(false);
     }
@@ -46,32 +47,26 @@ const ForgotPassword = ({ onNavigate }) => {
     e.preventDefault();
     setError('');
 
-    if (newPassword !== confirm) {
-      return setError('Passwords do not match');
+    const passwordError = validatePassword(newPassword);
+    if (passwordError) {
+      return setError(passwordError);
     }
-    if (newPassword.length < 6) {
-      return setError('Password must be at least 6 characters');
+    const confirmError = validatePasswordConfirm(newPassword, confirm);
+    if (confirmError) {
+      return setError(confirmError);
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim().toLowerCase(), newPassword }),
+      await resetPassword({
+        email: normalizeEmail(email),
+        newPassword
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error);
-      } else {
-        setSuccess('Password updated! Redirecting to login...');
-        setTimeout(() => onNavigate('login'), 1500);
-      }
-    } catch {
-      setError('Could not connect to server. Make sure the backend is running.');
+      setSuccess('Password updated! Redirecting to login...');
+      setTimeout(() => navigate('/login'), 1200);
+    } catch (apiError) {
+      setError(apiError.message);
     } finally {
       setLoading(false);
     }
@@ -145,9 +140,9 @@ const ForgotPassword = ({ onNavigate }) => {
         )}
 
         <div className="auth-links">
-          <button className="link-btn" onClick={() => onNavigate('login')}>
+          <Link className="link-btn" to="/login">
             Back to Sign In
-          </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 /* Dashboard Styles */
 .dashboard {
   min-height: 100vh;
-  background: linear-gradient(160deg, #002147 0%, #003580 100%);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(201, 162, 39, 0.22) 0%, rgba(201, 162, 39, 0) 30%),
+    linear-gradient(160deg, #031a35 0%, #063065 45%, #0a4b8c 100%);
   color: #333;
 }
 
@@ -155,6 +156,23 @@
 .quiz-cta-btn:hover {
   background: #b8911f;
   transform: scale(1.04);
+}
+
+.dashboard-status-wrap {
+  max-width: 1200px;
+  margin: 0 auto 1rem;
+  padding: 0 2rem;
+}
+
+.dashboard-status {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #f1d58a;
+  background: #fff4d2;
+  color: #6f5308;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 /* Controls */
@@ -603,6 +621,10 @@
     padding: 0 1rem;
   }
 
+  .dashboard-status-wrap {
+    padding: 0 1rem;
+  }
+
   .quiz-card {
     padding: 1rem;
   }
@@ -771,6 +793,13 @@
   outline-offset: 2px;
 }
 
+.major-card,
+.quiz-card,
+.stat-card,
+.quiz-result-card {
+  animation: fade-up 260ms ease-out both;
+}
+
 /* ===== FEATURE: Comparison Panel ===== */
 .comparison-panel {
   position: sticky;
@@ -894,4 +923,15 @@
 
 .comparison-career-list li {
   margin: 0.2rem 0;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

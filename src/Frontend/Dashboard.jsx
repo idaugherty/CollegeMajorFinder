@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './Dashboard.css';
+import { addFavorite, getFavorites, getMajors, removeFavorite } from '../services/api.js';
 
 const CAREER_PROFILES = [
   {
@@ -149,6 +150,7 @@ const Dashboard = ({ user, onLogout, onNavigateToQuiz }) => {
   const [selectedTag, setSelectedTag] = useState('All');
   const [expandedMajorId, setExpandedMajorId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [statusMessage, setStatusMessage] = useState('');
   // favorites is a Set of major IDs so we can do O(1) lookups when rendering each card
   const [favorites, setFavorites] = useState(new Set());
   // toggled by clicking the Saved Majors stat card
@@ -167,12 +169,11 @@ const Dashboard = ({ user, onLogout, onNavigateToQuiz }) => {
 
   const fetchMajors = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/majors');
-      const data = await response.json();
+      const data = await getMajors();
       setMajors(data);
-      setLoading(false);
     } catch (error) {
-      console.error('Error fetching majors:', error);
+      setStatusMessage(error.message || 'Could not load majors right now.');
+    } finally {
       setLoading(false);
     }
   };
@@ -215,22 +216,21 @@ const Dashboard = ({ user, onLogout, onNavigateToQuiz }) => {
 
   // Fetch majors data from backend
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchMajors();
   }, []);
 
   // pull the user's saved major IDs from the DB on load and store them in a Set
   useEffect(() => {
     if (!user?.id) return;
-    fetch(`http://localhost:3000/api/favorites/${user.id}`)
-      .then(r => r.json())
-      .then(data => {
+    getFavorites(user.id)
+      .then((data) => {
         if (Array.isArray(data)) {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setFavorites(new Set(data.map(f => f.major_id)));
         }
       })
-      .catch(() => {}); // silently fail — favorites just won't show as saved
+      .catch((error) => {
+        setStatusMessage(error.message || 'Could not load saved majors right now.');
+      });
   }, [user?.id]);
 
   const handleLearnMoreToggle = (majorId) => {
@@ -247,21 +247,18 @@ const Dashboard = ({ user, onLogout, onNavigateToQuiz }) => {
     });
     try {
       if (isFav) {
-        await fetch(`http://localhost:3000/api/favorites/${user.id}/${majorId}`, { method: 'DELETE' });
+        await removeFavorite(user.id, majorId);
       } else {
-        await fetch('http://localhost:3000/api/favorites', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: user.id, majorId })
-        });
+        await addFavorite(user.id, majorId);
       }
-    } catch {
+    } catch (error) {
       // if the network call fails, roll back to whatever it was before
       setFavorites(prev => {
         const next = new Set(prev);
         if (isFav) next.add(majorId); else next.delete(majorId);
         return next;
       });
+      setStatusMessage(error.message || 'Could not update saved majors right now.');
     }
   };
 
@@ -334,6 +331,12 @@ const Dashboard = ({ user, onLogout, onNavigateToQuiz }) => {
           <button className="quiz-cta-btn" onClick={onNavigateToQuiz}>Go to Quiz</button>
         </div>
       </div>
+
+      {statusMessage && (
+        <div className="dashboard-status-wrap">
+          <p className="dashboard-status">{statusMessage}</p>
+        </div>
+      )}
 
       {/* Search and Filters */}
       <div className="controls-container">
